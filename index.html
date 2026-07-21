@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="theme-color" content="#1f2a37">
+<title>Daily Construction Log — Konkrete Carpentry LLC</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+<style>
+  :root{
+    --ink:#1f2a37;
+    --ink-2:#3a4a5c;
+    --accent:#c2410c;
+    --accent-2:#ea580c;
+    --line:#dfe3e8;
+    --bg:#f4f5f7;
+    --card:#ffffff;
+    --muted:#6b7280;
+    --ok:#15803d;
+    --warn:#b45309;
+    --danger:#b91c1c;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;padding:0}
+  body{
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif;
+    background:var(--bg);color:var(--ink);
+    font-size:17px;line-height:1.45;
+    -webkit-text-size-adjust:100%;
+    padding-bottom:120px;
+  }
+  header{
+    position:sticky;top:0;z-index:50;
+    background:linear-gradient(135deg,var(--ink),var(--ink-2));
+    color:#fff;padding:16px 18px calc(16px + env(safe-area-inset-bottom,0)) 18px;
+    box-shadow:0 2px 10px rgba(0,0,0,.18);
+  }
+  .brandrow{display:flex;align-items:center;gap:12px}
+  .logo{
+    width:44px;height:44px;flex:0 0 44px;border-radius:10px;
+    background:var(--accent);display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:19px;letter-spacing:.5px;color:#fff;
+    box-shadow:inset 0 0 0 2px rgba(255,255,255,.15);
+  }
+  .brandtext h1{margin:0;font-size:18px;font-weight:800;letter-spacing:.2px}
+  .brandtext p{margin:2px 0 0;font-size:12.5px;color:#c9d2dc;text-transform:uppercase;letter-spacing:1.2px}
+  main{padding:14px 12px 0}
+  .card{
+    background:var(--card);border:1px solid var(--line);border-radius:var(--radius);
+    margin:0 0 14px;overflow:hidden;
+  }
+  .card > .head{
+    display:flex;align-items:center;gap:10px;
+    padding:14px 16px;border-bottom:1px solid var(--line);
+    background:#fbfbfc;
+  }
+  .card > .head .num{
+    width:26px;height:26px;flex:0 0 26px;border-radius:7px;background:var(--ink);color:#fff;
+    font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;
+  }
+  .card > .head h2{margin:0;font-size:16px;font-weight:700}
+  .card > .head .sub{margin-left:auto;font-size:12px;color:var(--muted)}
+  .body{padding:14px 16px}
+  label{display:block;font-size:13px;font-weight:600;color:var(--ink-2);margin:0 0 6px}
+  .hint{font-size:12.5px;color:var(--muted);margin:-2px 0 10px}
+  input[type=text],input[type=date],input[type=time],input[type=number],input[type=email],select,textarea{
+    width:100%;font-size:16px;font-family:inherit;color:var(--ink);
+    padding:12px 12px;border:1px solid var(--line);border-radius:10px;background:#fff;
+    -webkit-appearance:none;appearance:none;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--accent);box-shadow:0 0 0 3px rgba(194,65,12,.12)}
+  textarea{min-height:84px;resize:vertical;line-height:1.4}
+  .field{margin-bottom:14px}
+  .field:last-child{margin-bottom:0}
+  .row2{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+  .row3{display:grid;grid-template-columns:1fr 1fr 1fr;gap:10px}
+  .rep{border:1px solid var(--line);border-radius:12px;padding:12px;margin-bottom:10px;background:#fcfcfd;position:relative}
+  .rep .del{
+    position:absolute;top:8px;right:8px;width:30px;height:30px;border:none;border-radius:8px;
+    background:#fdecec;color:var(--danger);font-size:18px;font-weight:700;line-height:1;cursor:pointer;
+  }
+  .addbtn{
+    width:100%;padding:12px;border:1.5px dashed var(--accent);border-radius:10px;background:#fff7f2;
+    color:var(--accent);font-size:15px;font-weight:700;cursor:pointer;margin-top:2px;
+  }
+  .addbtn:active{background:#ffeee4}
+  .pillrow{display:flex;gap:8px;flex-wrap:wrap;margin-top:4px}
+  .pill{flex:1;min-width:90px}
+  .pill input{position:absolute;opacity:0;pointer-events:none}
+  .pill label{
+    display:block;text-align:center;padding:9px 6px;border:1px solid var(--line);border-radius:9px;
+    font-size:13px;font-weight:700;color:var(--muted);cursor:pointer;margin:0;background:#fff;
+  }
+  .pill input:checked + label{color:#fff}
+  .pill.low input:checked + label{background:var(--ok);border-color:var(--ok)}
+  .pill.med input:checked + label{background:var(--warn);border-color:var(--warn)}
+  .pill.high input:checked + label{background:var(--danger);border-color:var(--danger)}
+  .photobtn{
+    display:flex;align-items:center;justify-content:center;gap:10px;
+    width:100%;padding:16px;border:1.5px dashed var(--ink-2);border-radius:12px;background:#f7f8fa;
+    color:var(--ink-2);font-size:15px;font-weight:700;cursor:pointer;
+  }
+  .photobtn svg{width:22px;height:22px}
+  #photoInput{display:none}
+  .thumbs{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:12px}
+  .thumb{position:relative;border-radius:10px;overflow:hidden;border:1px solid var(--line);aspect-ratio:1/1;background:#eee}
+  .thumb img{width:100%;height:100%;object-fit:cover;display:block}
+  .thumb .x{
+    position:absolute;top:4px;right:4px;width:24px;height:24px;border:none;border-radius:50%;
+    background:rgba(0,0,0,.6);color:#fff;font-size:15px;line-height:1;cursor:pointer;
+  }
+  .thumb .cap{
+    position:absolute;left:0;right:0;bottom:0;border:none;width:100%;
+    font-size:11px;padding:4px 6px;background:rgba(0,0,0,.55);color:#fff;
+  }
+  .thumb .cap::placeholder{color:#d7d7d7}
+  .actions{
+    position:fixed;left:0;right:0;bottom:0;z-index:60;
+    background:#fff;border-top:1px solid var(--line);
+    padding:12px 12px calc(12px + env(safe-area-inset-bottom,0));
+    display:grid;grid-template-columns:1fr 1fr;gap:10px;
+    box-shadow:0 -4px 16px rgba(0,0,0,.08);
+  }
+  .btn{
+    padding:15px 10px;border-radius:12px;font-size:15.5px;font-weight:800;border:none;cursor:pointer;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .btn svg{width:19px;height:19px}
+  .btn.pdf{background:var(--accent);color:#fff}
+  .btn.pdf:active{background:var(--accent-2)}
+  .btn.mail{background:var(--ink);color:#fff}
+  .btn.mail:active{background:var(--ink-2)}
+  .btn.ghost{grid-column:1 / -1;background:#fff;color:var(--muted);border:1px solid var(--line);padding:11px;font-weight:600;font-size:13.5px}
+  .toast{
+    position:fixed;left:50%;bottom:96px;transform:translateX(-50%);
+    background:var(--ink);color:#fff;padding:12px 18px;border-radius:30px;font-size:14px;font-weight:600;
+    z-index:100;opacity:0;transition:opacity .2s, transform .2s;pointer-events:none;box-shadow:0 6px 20px rgba(0,0,0,.25);
+  }
+  .toast.show{opacity:1;transform:translateX(-50%) translateY(-6px)}
+  .footnote{text-align:center;color:var(--muted);font-size:12px;padding:4px 20px 10px}
+  @media print{ .actions,.addbtn,.rep .del,.thumb .x,.photobtn{display:none!important} body{padding-bottom:0} }
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brandrow">
+    <div class="logo">KC</div>
+    <div class="brandtext">
+      <h1>Daily Construction Log</h1>
+      <p>Konkrete Carpentry LLC</p>
+    </div>
+  </div>
+</header>
+
+<main id="doc">
+
+  <section class="card">
+    <div class="head"><div class="num">1</div><h2>Job Info</h2></div>
+    <div class="body">
+      <div class="row2">
+        <div class="field"><label>Date</label><input type="date" id="f_date"></div>
+        <div class="field"><label>Day / Shift</label>
+          <select id="f_shift">
+            <option value="">Select…</option>
+            <option>Day shift</option><option>Night shift</option><option>Weekend</option>
+          </select>
+        </div>
+      </div>
+      <div class="field"><label>Project / Job Name</label><input type="text" id="f_project" placeholder="e.g. Maple St. framing"></div>
+      <div class="row2">
+        <div class="field"><label>Foreman</label><input type="text" id="f_foreman" placeholder="Your name"></div>
+        <div class="field"><label>Weather</label><input type="text" id="f_weather" placeholder="e.g. 82°F, clear"></div>
+      </div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="head"><div class="num">2</div><h2>Tasks Performed</h2><span class="sub">Add each task</span></div>
+    <div class="body">
+      <div id="tasks"></div>
+      <button type="button" class="addbtn" onclick="addTask()">＋ Add task</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="head"><div class="num">3</div><h2>Issues &amp; Delays</h2><span class="sub">Anything holding you up</span></div>
+    <div class="body">
+      <div id="issues"></div>
+      <button type="button" class="addbtn" onclick="addIssue()">＋ Add issue</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="head"><div class="num">4</div><h2>Crew &amp; Hours</h2></div>
+    <div class="body">
+      <div class="row2">
+        <div class="field"><label>Crew on site</label><input type="number" inputmode="numeric" id="f_headcount" placeholder="# of workers"></div>
+        <div class="field"><label>Total labor hours</label><input type="number" inputmode="decimal" id="f_hours" placeholder="e.g. 64"></div>
+      </div>
+      <label>Crew / subs present</label>
+      <div class="hint">Names or trades on site today</div>
+      <div id="crew"></div>
+      <button type="button" class="addbtn" onclick="addCrew()">＋ Add crew / sub</button>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="head"><div class="num">5</div><h2>Deliveries &amp; Equipment</h2></div>
+    <div class="body">
+      <div class="field"><label>Materials delivered</label><textarea id="f_deliveries" placeholder="What arrived today, from whom, quantities…"></textarea></div>
+      <div class="field"><label>Equipment on site</label><textarea id="f_equipment" placeholder="Machines / tools on site, rentals, condition…"></textarea></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="head"><div class="num">6</div><h2>Safety</h2></div>
+    <div class="body">
+      <div class="field"><label>Toolbox talk / topic of the day</label><input type="text" id="f_toolbox" placeholder="e.g. Ladder safety"></div>
+      <div class="field">
+        <label>Any incidents or near-misses?</label>
+        <div class="pillrow">
+          <span class="pill low"><input type="radio" name="inc" id="inc_no" value="No — none" checked><label for="inc_no">None</label></span>
+          <span class="pill med"><input type="radio" name="inc" id="inc_near" value="Near-miss"><label for="inc_near">Near-miss</label></span>
+          <span class="pill high"><input type="radio" name="inc" id="inc_yes" value="Incident"><label for="inc_yes">Incident</label></span>
+        </div>
+      </div>
+      <div class="field"><label>Details (if any)</label><textarea id="f_incident" placeholder="Describe what happened, who was involved, action taken…"></textarea></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="head"><div class="num">7</div><h2>Photos</h2><span class="sub">Progress &amp; issues</span></div>
+    <div class="body">
+      <label for="photoInput" class="photobtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg>
+        Take or add photos
+      </label>
+      <input type="file" id="photoInput" accept="image/*" multiple>
+      <div class="thumbs" id="thumbs"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="head"><div class="num">8</div><h2>Daily Briefing with Crew</h2></div>
+    <div class="body">
+      <div class="field"><label>What was covered in the huddle</label>
+        <div class="hint">Goals set, priorities, coordination, reminders</div>
+        <textarea id="f_briefing" placeholder="What you told the crew this morning / at wrap-up…"></textarea></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <div class="head"><div class="num">9</div><h2>Action Plan — Tomorrow</h2></div>
+    <div class="body">
+      <div class="field"><label>Plan for next day</label><textarea id="f_plan" placeholder="Priorities, crew needed, materials to order, sequence…"></textarea></div>
+      <div class="field"><label>Needs / requests to office</label><textarea id="f_needs" placeholder="Anything you need ordered, approved, or scheduled"></textarea></div>
+    </div>
+  </section>
+
+  <div class="footnote">Fill it in, then tap <b>PDF</b> to save it or <b>Email</b> to send it in.</div>
+
+</main>
+
+<div class="actions">
+  <button class="btn pdf" onclick="makePDF()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+    Save PDF
+  </button>
+  <button class="btn mail" onclick="sendEmail()">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 4h16a2 2 0 0 1 2 2v12a2 2 0 0 1-2 2H4a2 2 0 0 1-2-2V6a2 2 0 0 1 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+    Email in
+  </button>
+  <button class="btn ghost" onclick="clearForm()">Start a fresh log</button>
+</div>
+
+<div class="toast" id="toast"></div>
+
+<script>
+var SEND_TO = "bessy@konkreteny.com"; // office email the log is sent to
+
+function el(id){return document.getElementById(id);}
+function val(id){var e=el(id);return e?e.value.trim():"";}
+function toast(msg){var t=el('toast');t.textContent=msg;t.classList.add('show');clearTimeout(t._t);t._t=setTimeout(function(){t.classList.remove('show');},2200);}
+
+(function(){
+  var d=new Date();var off=d.getTimezoneOffset();var local=new Date(d.getTime()-off*60000);
+  el('f_date').value=local.toISOString().slice(0,10);
+})();
+
+function addTask(v){
+  var wrap=document.createElement('div');wrap.className='rep';
+  wrap.innerHTML='<button type="button" class="del" onclick="this.parentNode.remove()">×</button>'+
+    '<label>Task</label><input type="text" class="t-desc" placeholder="e.g. Framed 2nd floor east wall">'+
+    '<div style="height:10px"></div>'+
+    '<label>Location / status</label><input type="text" class="t-note" placeholder="e.g. Grid B — complete / 80%">';
+  el('tasks').appendChild(wrap);
+  if(v){wrap.querySelector('.t-desc').value=v;}
+}
+function addIssue(){
+  var wrap=document.createElement('div');wrap.className='rep';
+  wrap.innerHTML='<button type="button" class="del" onclick="this.parentNode.remove()">×</button>'+
+    '<label>Issue / delay</label><input type="text" class="i-desc" placeholder="What happened & impact">'+
+    '<div style="height:10px"></div>'+
+    '<label>Severity</label>'+
+    '<div class="pillrow">'+
+      '<span class="pill low"><input type="radio" name="sev'+(iCount)+'" value="Low" checked><label>Low</label></span>'+
+      '<span class="pill med"><input type="radio" name="sev'+(iCount)+'" value="Medium"><label>Med</label></span>'+
+      '<span class="pill high"><input type="radio" name="sev'+(iCount)+'" value="High"><label>High</label></span>'+
+    '</div>';
+  el('issues').appendChild(wrap);
+  wrap.querySelectorAll('.pill').forEach(function(p){var r=p.querySelector('input');p.querySelector('label').addEventListener('click',function(){r.checked=true;});});
+  iCount++;
+}
+var iCount=0;
+function addCrew(v){
+  var wrap=document.createElement('div');wrap.className='rep';
+  wrap.innerHTML='<button type="button" class="del" onclick="this.parentNode.remove()">×</button>'+
+    '<div class="row2">'+
+      '<div><label>Name / trade</label><input type="text" class="c-name" placeholder="e.g. Mike — carpenter"></div>'+
+      '<div><label>Hours</label><input type="number" inputmode="decimal" class="c-hrs" placeholder="8"></div>'+
+    '</div>';
+  el('crew').appendChild(wrap);
+  if(v){wrap.querySelector('.c-name').value=v;}
+}
+
+addTask();addIssue();addCrew();
+
+var photos=[];
+el('photoInput').addEventListener('change',function(e){
+  var files=Array.from(e.target.files||[]);
+  files.forEach(function(file){
+    var reader=new FileReader();
+    reader.onload=function(ev){
+      var img=new Image();
+      img.onload=function(){
+        var max=1280;var w=img.width,h=img.height;
+        if(w>max||h>max){var s=Math.min(max/w,max/h);w=Math.round(w*s);h=Math.round(h*s);}
+        var c=document.createElement('canvas');c.width=w;c.height=h;
+        c.getContext('2d').drawImage(img,0,0,w,h);
+        photos.push({src:c.toDataURL('image/jpeg',0.75),cap:''});
+        renderThumbs();
+      };
+      img.src=ev.target.result;
+    };
+    reader.readAsDataURL(file);
+  });
+  el('photoInput').value='';
+});
+function renderThumbs(){
+  var box=el('thumbs');box.innerHTML='';
+  photos.forEach(function(p,i){
+    var d=document.createElement('div');d.className='thumb';
+    d.innerHTML='<img src="'+p.src+'">'+
+      '<button class="x" onclick="removePhoto('+i+')">×</button>'+
+      '<input class="cap" placeholder="Caption…" value="'+(p.cap||'').replace(/"/g,'&quot;')+'" oninput="photos['+i+'].cap=this.value">';
+    box.appendChild(d);
+  });
+}
+function removePhoto(i){photos.splice(i,1);renderThumbs();}
+
+function collect(){
+  var tasks=[];document.querySelectorAll('#tasks .rep').forEach(function(r){
+    var d=r.querySelector('.t-desc').value.trim();var n=r.querySelector('.t-note').value.trim();
+    if(d||n)tasks.push({d:d,n:n});
+  });
+  var issues=[];document.querySelectorAll('#issues .rep').forEach(function(r){
+    var d=r.querySelector('.i-desc').value.trim();
+    var sev='';var s=r.querySelector('input[type=radio]:checked');if(s)sev=s.value;
+    if(d)issues.push({d:d,sev:sev});
+  });
+  var crew=[];document.querySelectorAll('#crew .rep').forEach(function(r){
+    var n=r.querySelector('.c-name').value.trim();var h=r.querySelector('.c-hrs').value.trim();
+    if(n)crew.push({n:n,h:h});
+  });
+  var inc=document.querySelector('input[name=inc]:checked');
+  return {
+    date:val('f_date'),shift:val('f_shift'),project:val('f_project'),foreman:val('f_foreman'),weather:val('f_weather'),
+    tasks:tasks,issues:issues,
+    headcount:val('f_headcount'),hours:val('f_hours'),crew:crew,
+    deliveries:val('f_deliveries'),equipment:val('f_equipment'),
+    toolbox:val('f_toolbox'),incident:(inc?inc.value:''),incidentDetail:val('f_incident'),
+    briefing:val('f_briefing'),plan:val('f_plan'),needs:val('f_needs')
+  };
+}
+
+function asText(){
+  var g=collect();var L=[];
+  L.push('DAILY CONSTRUCTION LOG — Konkrete Carpentry LLC');
+  L.push('=============================================');
+  L.push('Date: '+g.date+(g.shift?'  ('+g.shift+')':''));
+  if(g.project)L.push('Project: '+g.project);
+  if(g.foreman)L.push('Foreman: '+g.foreman);
+  if(g.weather)L.push('Weather: '+g.weather);
+  L.push('');
+  L.push('TASKS PERFORMED');
+  if(g.tasks.length)g.tasks.forEach(function(t){L.push('  • '+t.d+(t.n?'  ['+t.n+']':''));});else L.push('  —');
+  L.push('');
+  L.push('ISSUES & DELAYS');
+  if(g.issues.length)g.issues.forEach(function(i){L.push('  • ['+i.sev+'] '+i.d);});else L.push('  None');
+  L.push('');
+  L.push('CREW & HOURS');
+  L.push('  Crew on site: '+(g.headcount||'—')+'   Total labor hours: '+(g.hours||'—'));
+  if(g.crew.length)g.crew.forEach(function(c){L.push('  • '+c.n+(c.h?'  ('+c.h+' hrs)':''));});
+  L.push('');
+  L.push('DELIVERIES & EQUIPMENT');
+  L.push('  Deliveries: '+(g.deliveries||'—'));
+  L.push('  Equipment: '+(g.equipment||'—'));
+  L.push('');
+  L.push('SAFETY');
+  L.push('  Toolbox talk: '+(g.toolbox||'—'));
+  L.push('  Incidents: '+(g.incident||'—'));
+  if(g.incidentDetail)L.push('  Details: '+g.incidentDetail);
+  L.push('');
+  L.push('DAILY BRIEFING WITH CREW');
+  L.push('  '+(g.briefing||'—'));
+  L.push('');
+  L.push('ACTION PLAN — TOMORROW');
+  L.push('  '+(g.plan||'—'));
+  if(g.needs)L.push('  Needs/requests: '+g.needs);
+  L.push('');
+  L.push('Photos attached: '+photos.length+(photos.length?' (see PDF)':''));
+  return L.join('\n');
+}
+
+function pdfHTML(){
+  var g=collect();
+  function esc(s){return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');}
+  function sec(title,inner){return '<div style="margin:0 0 14px"><div style="background:#1f2a37;color:#fff;font-weight:700;font-size:13px;padding:7px 10px;border-radius:6px 6px 0 0">'+title+'</div><div style="border:1px solid #dfe3e8;border-top:none;padding:10px;border-radius:0 0 6px 6px;font-size:12.5px">'+inner+'</div></div>';}
+  var sevColor={Low:'#15803d',Medium:'#b45309',High:'#b91c1c'};
+  var tasksH=g.tasks.length?g.tasks.map(function(t){return '<div style="padding:4px 0;border-bottom:1px solid #eee">▸ <b>'+esc(t.d)+'</b>'+(t.n?' <span style="color:#6b7280">— '+esc(t.n)+'</span>':'')+'</div>';}).join(''):'<i style="color:#6b7280">No tasks recorded</i>';
+  var issH=g.issues.length?g.issues.map(function(i){return '<div style="padding:4px 0;border-bottom:1px solid #eee"><span style="display:inline-block;min-width:56px;color:#fff;background:'+(sevColor[i.sev]||'#6b7280')+';font-size:10px;font-weight:700;padding:2px 6px;border-radius:4px;text-align:center;margin-right:6px">'+esc(i.sev)+'</span>'+esc(i.d)+'</div>';}).join(''):'<i style="color:#15803d">No issues reported</i>';
+  var crewH='<div style="margin-bottom:6px"><b>Crew on site:</b> '+(esc(g.headcount)||'—')+' &nbsp;|&nbsp; <b>Total labor hours:</b> '+(esc(g.hours)||'—')+'</div>';
+  crewH+=g.crew.length?g.crew.map(function(c){return '<div style="padding:2px 0">• '+esc(c.n)+(c.h?' <span style="color:#6b7280">('+esc(c.h)+' hrs)</span>':'')+'</div>';}).join(''):'';
+  var safeH='<div><b>Toolbox talk:</b> '+(esc(g.toolbox)||'—')+'</div><div style="margin-top:4px"><b>Incidents:</b> '+(esc(g.incident)||'—')+'</div>'+(g.incidentDetail?'<div style="margin-top:4px;color:#6b7280">'+esc(g.incidentDetail)+'</div>':'');
+  var delH='<div><b>Materials delivered:</b> '+(esc(g.deliveries)||'—')+'</div><div style="margin-top:6px"><b>Equipment on site:</b> '+(esc(g.equipment)||'—')+'</div>';
+  var photoH='';
+  if(photos.length){
+    photoH='<div style="display:flex;flex-wrap:wrap;gap:8px">'+photos.map(function(p){return '<div style="width:31%;text-align:center"><img src="'+p.src+'" style="width:100%;border:1px solid #dfe3e8;border-radius:6px"><div style="font-size:10px;color:#6b7280;margin-top:2px">'+esc(p.cap)+'</div></div>';}).join('')+'</div>';
+  } else { photoH='<i style="color:#6b7280">No photos added</i>'; }
+
+  return '<div style="font-family:Helvetica,Arial,sans-serif;color:#1f2a37;width:720px;padding:22px">'+
+    '<div style="display:flex;align-items:center;gap:12px;border-bottom:3px solid #c2410c;padding-bottom:12px;margin-bottom:16px">'+
+      '<div style="width:46px;height:46px;background:#c2410c;color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:18px">KC</div>'+
+      '<div><div style="font-size:20px;font-weight:800">Daily Construction Log</div><div style="font-size:12px;color:#6b7280;letter-spacing:1px;text-transform:uppercase">Konkrete Carpentry LLC</div></div>'+
+      '<div style="margin-left:auto;text-align:right;font-size:12px"><div><b>'+esc(g.date)+'</b></div><div style="color:#6b7280">'+esc(g.shift)+'</div></div>'+
+    '</div>'+
+    '<table style="width:100%;font-size:12.5px;margin-bottom:14px"><tr>'+
+      '<td><b>Project:</b> '+(esc(g.project)||'—')+'</td>'+
+      '<td><b>Foreman:</b> '+(esc(g.foreman)||'—')+'</td>'+
+      '<td><b>Weather:</b> '+(esc(g.weather)||'—')+'</td>'+
+    '</tr></table>'+
+    sec('TASKS PERFORMED',tasksH)+
+    sec('ISSUES &amp; DELAYS',issH)+
+    sec('CREW &amp; HOURS',crewH)+
+    sec('DELIVERIES &amp; EQUIPMENT',delH)+
+    sec('SAFETY',safeH)+
+    sec('DAILY BRIEFING WITH CREW',esc(g.briefing)||'<i style="color:#6b7280">—</i>')+
+    sec('ACTION PLAN — TOMORROW',(esc(g.plan)||'<i style="color:#6b7280">—</i>')+(g.needs?'<div style="margin-top:6px"><b>Needs / requests:</b> '+esc(g.needs)+'</div>':''))+
+    sec('PHOTOS',photoH)+
+    '<div style="text-align:center;color:#9aa3ad;font-size:10px;margin-top:10px">Generated from the Konkrete Carpentry daily log form</div>'+
+  '</div>';
+}
+
+function fileStub(){
+  var g=collect();var d=g.date||'log';
+  var proj=(g.project||'').replace(/[^a-z0-9]+/gi,'-').replace(/^-|-$/g,'');
+  return 'Daily-Log_'+d+(proj?'_'+proj:'');
+}
+function makePDF(){
+  toast('Building PDF…');
+  var holder=document.createElement('div');holder.innerHTML=pdfHTML();
+  document.body.appendChild(holder);
+  var opt={margin:[10,10,10,10],filename:fileStub()+'.pdf',image:{type:'jpeg',quality:0.9},
+    html2canvas:{scale:2,useCORS:true},jsPDF:{unit:'mm',format:'a4',orientation:'portrait'},
+    pagebreak:{mode:['css','legacy']}};
+  html2pdf().set(opt).from(holder.firstChild).save().then(function(){
+    holder.remove();toast('PDF saved ✓');
+  }).catch(function(){holder.remove();toast('PDF failed — try again');});
+}
+function sendEmail(){
+  var g=collect();
+  var subj='Daily Log — '+(g.project?g.project+' — ':'')+(g.date||'');
+  var body=asText()+'\n\n(Tip: tap “Save PDF” first to attach the full log with photos.)';
+  var href='mailto:'+encodeURIComponent(SEND_TO)+'?subject='+encodeURIComponent(subj)+'&body='+encodeURIComponent(body);
+  window.location.href=href;
+}
+function clearForm(){
+  if(!confirm('Clear this log and start fresh?'))return;
+  ['f_shift','f_project','f_foreman','f_weather','f_headcount','f_hours','f_deliveries','f_equipment','f_toolbox','f_incident','f_briefing','f_plan','f_needs'].forEach(function(id){el(id).value='';});
+  el('inc_no').checked=true;
+  el('tasks').innerHTML='';el('issues').innerHTML='';el('crew').innerHTML='';iCount=0;
+  photos=[];renderThumbs();
+  addTask();addIssue();addCrew();
+  window.scrollTo(0,0);toast('Fresh log ready');
+}
+</script>
+</body>
+</html>
